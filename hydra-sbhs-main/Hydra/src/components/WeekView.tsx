@@ -33,12 +33,13 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-function codeFor(title?: string): string {
+function codeFor(title?: string | null): string {
   if (!title) return '';
   return SUBJECT_CODE[title] || '';
 }
 
-function stripTitle(t: string): string {
+function stripTitle(t?: string | null): string {
+  if (!t) return '';
   return t.replace(/^(Mr|Ms|Mrs|Dr|Mx) /, '');
 }
 
@@ -145,7 +146,7 @@ export function WeekView({ onUnauthorized }: { onUnauthorized?: () => void } = {
                 <div key={dk + pid} className={cls}>
                   <div className="wg-title">{p?.title || '–'}</div>
                   {p && !isFree && (
-                    <div className="wg-meta">{p.room} · {stripTitle(p.teacher)}</div>
+                    <div className="wg-meta">{[p.room, stripTitle(p.teacher)].filter(Boolean).join(' · ')}</div>
                   )}
                 </div>
               );
