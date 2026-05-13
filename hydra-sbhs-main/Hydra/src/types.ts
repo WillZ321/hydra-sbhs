@@ -24,10 +24,10 @@ export interface BellsResponse {
 }
 
 export interface Period {
-  title: string;
-  teacher: string;
+  title: string | null;
+  teacher: string | null;
   fullTeacher?: string;
-  room: string;
+  room: string | null;
   year?: string;
 }
 
