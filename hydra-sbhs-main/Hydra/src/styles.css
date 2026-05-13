@@ -1,0 +1,328 @@
+/* Hydra — editorial minimal */
+
+html, body, #root { height: 100%; margin: 0; }
+* { box-sizing: border-box; }
+body { background: #0f1115; }
+
+.hydra {
+  --accent: #5874c2;
+  --bg:        oklch(0.985 0.004 85);
+  --surface:   oklch(0.985 0.004 85);
+  --text:      oklch(0.20 0.008 80);
+  --text-2:    oklch(0.42 0.008 80);
+  --muted:     oklch(0.62 0.006 80);
+  --hairline:  oklch(0.88 0.006 80);
+  --hairline-2:oklch(0.93 0.006 80);
+  --hi-bg:     oklch(0.94 0.06 95);
+  --hi-ink:    oklch(0.32 0.07 70);
+  font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
+  min-height: 100%;
+}
+.hydra.dark {
+  --bg:        oklch(0.16 0.005 270);
+  --surface:   oklch(0.18 0.006 270);
+  --text:      oklch(0.96 0.003 80);
+  --text-2:    oklch(0.78 0.005 80);
+  --muted:     oklch(0.55 0.005 80);
+  --hairline:  oklch(0.28 0.006 270);
+  --hairline-2:oklch(0.22 0.006 270);
+  --hi-bg:     oklch(0.30 0.05 80);
+  --hi-ink:    oklch(0.88 0.08 90);
+}
+
+.mono, .hydra .mono { font-family: 'Geist Mono', ui-monospace, 'SF Mono', monospace; letter-spacing: 0; }
+
+/* App shell */
+.hydra .shell { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg); color: var(--text); }
+.hydra .topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--hairline-2);
+}
+.hydra .brand { display: flex; align-items: baseline; gap: 10px; }
+.hydra .brand-mark { font-family: 'Newsreader', serif; font-style: italic; font-weight: 300; font-size: 26px; letter-spacing: -0.02em; }
+.hydra .brand-sub  { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.hydra .tabs { display: flex; gap: 4px; }
+.hydra .tab {
+  appearance: none; border: 0; background: transparent; font: inherit;
+  color: var(--muted); padding: 6px 12px; cursor: pointer;
+  font-size: 13px; letter-spacing: 0.01em; border-radius: 999px;
+  transition: color .15s, background .15s;
+}
+.hydra .tab:hover { color: var(--text); }
+.hydra .tab.active { color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, transparent); }
+.hydra .topbar-right { display: flex; align-items: center; gap: 12px; }
+.hydra .who { font-size: 12px; color: var(--muted); }
+.hydra .icon-btn {
+  appearance: none; border: 0; background: transparent;
+  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text-2); cursor: pointer; border-radius: 6px;
+}
+.hydra .icon-btn:hover { background: color-mix(in oklab, var(--text) 6%, transparent); color: var(--text); }
+
+.hydra .main { flex: 1; overflow: auto; }
+.hydra .container { max-width: 920px; margin: 0 auto; padding: 36px 28px 60px; }
+
+/* Today: hero */
+.hydra .hero {
+  display: grid; grid-template-columns: 1fr auto; align-items: end;
+  gap: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--hairline-2);
+}
+.hydra .eyebrow {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 14px;
+  display: flex; gap: 14px; align-items: center;
+}
+.hydra .eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.55 } }
+
+.hydra .now-title {
+  font-family: 'Newsreader', serif; font-weight: 300; font-style: italic;
+  font-size: 64px; line-height: 1.02; letter-spacing: -0.025em; margin: 0;
+}
+.hydra .now-meta {
+  margin-top: 8px; color: var(--text-2); font-size: 14px;
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+}
+.hydra .now-meta .sep { color: var(--hairline); }
+.hydra .countdown-block { text-align: right; min-width: 180px; }
+.hydra .countdown-label {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+}
+.hydra .countdown-time {
+  font-family: 'Geist Mono', monospace;
+  font-size: 48px; font-weight: 300; letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 6px; line-height: 1;
+}
+.hydra .countdown-next { font-size: 13px; color: var(--text-2); margin-top: 6px; }
+
+/* Variations banner */
+.hydra .banner {
+  margin-top: 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px;
+  background: var(--hi-bg); color: var(--hi-ink);
+  font-size: 13px; border-radius: 4px;
+}
+.hydra .banner .b-lbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+.hydra .banner .b-count {
+  font-family: 'Geist Mono', monospace; font-size: 11px;
+  padding: 2px 7px; border-radius: 999px;
+  background: color-mix(in oklab, var(--hi-ink) 14%, transparent);
+}
+
+/* Day list */
+.hydra .day-meta {
+  margin-top: 26px; margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.hydra .day-meta h3 { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.hydra .day-meta .date-pick {
+  appearance: none; background: transparent; border: 0; color: var(--text-2);
+  font: inherit; font-size: 13px; cursor: pointer;
+}
+
+.hydra .day-list { display: flex; flex-direction: column; list-style: none; padding: 0; margin: 0; }
+.hydra .period {
+  display: grid;
+  grid-template-columns: 84px 1fr 110px;
+  gap: 18px; align-items: baseline;
+  padding: 18px 0;
+  border-top: 1px solid var(--hairline-2);
+  cursor: pointer;
+  position: relative;
+}
+.hydra .period:last-child { border-bottom: 1px solid var(--hairline-2); }
+.hydra .period:hover .p-title { color: var(--accent); }
+.hydra .period.now::before {
+  content: ''; position: absolute; left: -16px; top: 26px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent);
+}
+.hydra .period.past { opacity: 0.45; }
+.hydra .period.free { opacity: 0.55; cursor: default; }
+.hydra .p-time {
+  font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--muted);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.hydra .p-time .p-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.hydra .p-title {
+  font-size: 22px; font-weight: 400; letter-spacing: -0.015em;
+  transition: color .15s;
+}
+.hydra .p-sub {
+  margin-top: 4px; font-size: 13px; color: var(--text-2);
+  display: flex; gap: 10px; align-items: center;
+}
+.hydra .p-sub .strike { color: var(--muted); text-decoration: line-through; }
+.hydra .hi {
+  background: var(--hi-bg); color: var(--hi-ink);
+  padding: 1px 6px; border-radius: 3px;
+  font-weight: 500;
+}
+.hydra .p-right {
+  text-align: right; font-size: 13px; color: var(--text-2);
+  font-family: 'Geist Mono', monospace; letter-spacing: 0.01em;
+}
+.hydra .p-right .room { display: block; font-size: 15px; color: var(--text); }
+
+.hydra .p-expand {
+  grid-column: 1 / -1;
+  padding: 18px 0 6px 102px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  animation: slidedown .25s ease;
+  border-top: 1px dashed var(--hairline);
+  margin-top: 14px;
+}
+@keyframes slidedown { from { opacity: 0; transform: translateY(-4px) } to { opacity: 1; transform: none } }
+.hydra .p-expand .k { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.hydra .p-expand .v { font-size: 15px; }
+.hydra .p-expand .v.mono { font-family: 'Geist Mono', monospace; }
+
+/* Week view */
+.hydra .week-head {
+  display: flex; justify-content: space-between; align-items: end;
+  padding-bottom: 22px; border-bottom: 1px solid var(--hairline-2);
+}
+.hydra .week-head h2 {
+  margin: 0; font-family: 'Newsreader', serif; font-weight: 300; font-style: italic;
+  font-size: 48px; letter-spacing: -0.02em;
+}
+.hydra .week-toggle {
+  display: inline-flex; padding: 3px;
+  border: 1px solid var(--hairline); border-radius: 999px;
+  background: var(--surface);
+}
+.hydra .week-toggle button {
+  appearance: none; border: 0; background: transparent; font: inherit;
+  padding: 6px 18px; font-size: 12px; letter-spacing: 0.04em;
+  color: var(--muted); border-radius: 999px; cursor: pointer;
+}
+.hydra .week-toggle button.active {
+  background: var(--text); color: var(--bg);
+}
+.hydra .week-grid {
+  margin-top: 26px;
+  display: grid; grid-template-columns: 60px repeat(5, minmax(0, 1fr));
+  gap: 0;
+}
+.hydra .wg-cell {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--hairline-2);
+  border-right: 1px solid var(--hairline-2);
+  min-height: 84px; position: relative;
+}
+.hydra .wg-cell.last-col { border-right: 0; }
+.hydra .wg-head {
+  padding: 0 12px 12px;
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--hairline);
+  border-right: 1px solid var(--hairline-2);
+}
+.hydra .wg-head.last-col { border-right: 0; }
+.hydra .wg-time {
+  font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--muted);
+  padding: 14px 8px 0; text-align: right;
+  border-bottom: 1px solid var(--hairline-2);
+}
+.hydra .wg-time.first { border-top: 1px solid var(--hairline); }
+.hydra .wg-title { font-size: 14px; line-height: 1.25; letter-spacing: -0.01em; }
+.hydra .wg-meta { margin-top: 4px; font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--muted); }
+.hydra .wg-cell.free { background: color-mix(in oklab, var(--text) 2%, transparent); }
+.hydra .wg-cell.free .wg-title { color: var(--muted); font-style: italic; }
+.hydra .wg-cell.today { background: color-mix(in oklab, var(--accent) 6%, transparent); }
+.hydra .wg-cell.subject-EN { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 60); }
+.hydra .wg-cell.subject-MX { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 200); }
+.hydra .wg-cell.subject-PH { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 280); }
+.hydra .wg-cell.subject-MH { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 30); }
+.hydra .wg-cell.subject-PE { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 140); }
+.hydra .wg-cell.subject-ST { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 240); }
+.hydra .wg-cell.subject-MU { box-shadow: inset 3px 0 0 0 oklch(0.65 0.12 320); }
+
+/* Sign-in */
+.hydra .signin {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 56px 36px 48px;
+  max-width: 520px; margin: 0 auto;
+}
+.hydra .signin .si-mark {
+  font-family: 'Newsreader', serif; font-style: italic; font-weight: 300;
+  font-size: 80px; line-height: 1; letter-spacing: -0.04em;
+}
+.hydra .signin .si-tag {
+  font-size: 13px; color: var(--muted); margin-top: 12px;
+  max-width: 24ch; line-height: 1.5;
+}
+.hydra .signin .si-glyph { flex: 1; display: flex; align-items: center; padding: 24px 0; }
+.hydra .signin .si-bottom { display: flex; flex-direction: column; gap: 16px; }
+.hydra .signin .si-btn {
+  appearance: none; border: 1px solid var(--text); background: var(--text); color: var(--bg);
+  padding: 14px 18px; border-radius: 4px; font: inherit; font-size: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; letter-spacing: 0.01em;
+  transition: background .15s, border-color .15s;
+}
+.hydra .signin .si-btn:hover { background: var(--accent); border-color: var(--accent); }
+.hydra .signin .si-foot { font-size: 11px; color: var(--muted); line-height: 1.6; }
+.hydra .signin .si-error {
+  font-size: 12px; color: oklch(0.55 0.18 25);
+  padding: 8px 10px; border: 1px solid currentColor; border-radius: 4px;
+}
+
+/* Loading / states */
+.hydra .loading, .hydra .error-state {
+  padding: 60px 28px; text-align: center; color: var(--muted); font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.hydra .error-state { color: oklch(0.55 0.18 25); }
+
+/* Legend */
+.hydra .week-legend {
+  margin-top: 22px; display: flex; flex-wrap: wrap; gap: 14px;
+  font-size: 11px; color: var(--muted);
+}
+.hydra .week-legend .swatch {
+  width: 8px; height: 8px; border-radius: 1px; display: inline-block; margin-right: 6px;
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  .hydra .topbar { padding: 14px 20px; }
+  .hydra .brand-mark { font-size: 22px; }
+  .hydra .brand-sub { display: none; }
+  .hydra .container { padding: 24px 20px 80px; }
+  .hydra .now-title { font-size: 36px; }
+  .hydra .countdown-time { font-size: 32px; }
+  .hydra .hero { grid-template-columns: 1fr; align-items: start; }
+  .hydra .countdown-block { text-align: left; }
+  .hydra .period { grid-template-columns: 64px 1fr auto; gap: 12px; padding: 14px 0; }
+  .hydra .p-title { font-size: 17px; }
+  .hydra .p-time { font-size: 12px; }
+  .hydra .p-time .p-label { display: none; }
+  .hydra .p-right { font-size: 12px; }
+  .hydra .p-right .room { font-size: 13px; }
+  .hydra .p-sub { font-size: 12px; gap: 8px; }
+  .hydra .p-expand { padding-left: 76px; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .hydra .p-expand .v { font-size: 14px; }
+  .hydra .week-head h2 { font-size: 32px; }
+  .hydra .week-grid { grid-template-columns: 50px repeat(5, minmax(0, 1fr)); }
+  .hydra .wg-cell { padding: 10px 6px; min-height: 64px; }
+  .hydra .wg-title { font-size: 11px; }
+  .hydra .wg-meta { font-size: 9px; }
+  .hydra .wg-head { font-size: 10px; padding: 0 6px 8px; }
+  .hydra .wg-time { font-size: 9px; padding: 8px 4px 0; }
+}
