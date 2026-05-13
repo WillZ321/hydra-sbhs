@@ -35,6 +35,7 @@ jobs:
         working-directory: hydra-sbhs-main/Hydra
         env:
           VITE_BASE_PATH: /hydra-sbhs/
+          VITE_SBHS_CLIENT_ID: ${{ secrets.VITE_SBHS_CLIENT_ID }}
         run: |
           npx tsc -b
           npx vite build
