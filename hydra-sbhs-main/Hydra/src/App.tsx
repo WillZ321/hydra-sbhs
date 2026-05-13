@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { beginLogin, completeLogin, isLoggedIn, logout } from './auth';
 import { TodayView } from './components/TodayView';
 import { WeekView } from './components/WeekView';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 type Tab = 'today' | 'week';
 
@@ -134,11 +135,13 @@ export function App() {
             </button>
           </div>
         </header>
+        <ErrorBoundary>
         <main className="main">
           {tab === 'today'
             ? <TodayView onUnauthorized={handleUnauthorized} />
             : <WeekView onUnauthorized={handleUnauthorized} />}
         </main>
+        </ErrorBoundary>
       </div>
     </div>
   );
