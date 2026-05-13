@@ -37,8 +37,9 @@ jobs:
           VITE_BASE_PATH: /hydra-sbhs/
           VITE_SBHS_CLIENT_ID: ${{ secrets.VITE_SBHS_CLIENT_ID }}
         run: |
+          echo "Client ID length: ${#VITE_SBHS_CLIENT_ID}"
           npx tsc -b
-          npx vite build
+          npx vite build --mode production
           cp dist/index.html dist/404.html
 
       - name: Upload artifact
