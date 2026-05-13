@@ -67,7 +67,16 @@ export function WeekView({ onUnauthorized }: { onUnauthorized?: () => void } = {
       .catch(e => { handleAuthErr(e); /* otherwise ignore — week toggle still works */ });
   }, [onUnauthorized]);
 
-  const allDayKeys = useMemo(() => tt ? Object.keys(tt.days).sort((a, b) => Number(a) - Number(b)) : [], [tt]);
+  // Filter out days with no periods (non-teaching / routine-only / accelerant-gap days)
+  // so we never render a column that would throw when accessing d.periods[pid].
+  const allDayKeys = useMemo(
+    () => tt
+      ? Object.keys(tt.days)
+          .filter(k => tt.days[k]?.periods)
+          .sort((a, b) => Number(a) - Number(b))
+      : [],
+    [tt],
+  );
   const half = Math.ceil(allDayKeys.length / 2);
   const weekDays = week === 'A' ? allDayKeys.slice(0, half) : allDayKeys.slice(half);
 
@@ -83,9 +92,9 @@ export function WeekView({ onUnauthorized }: { onUnauthorized?: () => void } = {
         <div>
           <div className="eyebrow">
             <span>
-              {tt.student.firstName} {tt.student.surname}
-              {tt.student.yearGroup ? ` · Year ${tt.student.yearGroup}` : ''}
-              {tt.student.rollClass ? ` · ${tt.student.rollClass}` : ''}
+              {tt.student?.firstName} {tt.student?.surname}
+              {tt.student?.yearGroup ? ` · Year ${tt.student.yearGroup}` : ''}
+              {tt.student?.rollClass ? ` · ${tt.student.rollClass}` : ''}
             </span>
           </div>
           <h2>Cycle</h2>
@@ -118,7 +127,9 @@ export function WeekView({ onUnauthorized }: { onUnauthorized?: () => void } = {
             <div className={`wg-time ${rowIdx === 0 ? 'first' : ''}`}>{BELL_TIMES[rowIdx]}</div>
             {weekDays.map((dk, i) => {
               const d = tt.days[dk];
-              const p = d.periods[pid];
+              // Belt-and-suspenders guard: allDayKeys already filters days without periods,
+              // but optional chaining here prevents a throw if an edge case slips through.
+              const p = d?.periods?.[pid];
               const isFree = !p || p.title === 'Free';
               const code = codeFor(p?.title);
               const isToday = week === todayWeek && dk === todayKey;
@@ -132,7 +143,7 @@ export function WeekView({ onUnauthorized }: { onUnauthorized?: () => void } = {
               ].filter(Boolean).join(' ');
               return (
                 <div key={dk + pid} className={cls}>
-                  <div className="wg-title">{p?.title || '—'}</div>
+                  <div className="wg-title">{p?.title || '–'}</div>
                   {p && !isFree && (
                     <div className="wg-meta">{p.room} · {stripTitle(p.teacher)}</div>
                   )}
